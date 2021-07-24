@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Author: David Barnes
+// Class: CIS 237
+// Assignment: 5
+using System;
 
 namespace cis237_assignment_5
 {
@@ -8,23 +11,14 @@ namespace cis237_assignment_5
         {
             // Set Console Window Size
             Console.BufferHeight = Int16.MaxValue - 1;
-            Console.WindowHeight = 40;
+            Console.WindowHeight = 28;
             Console.WindowWidth = 120;
-
-            // Set a constant for the size of the collection
-            const int beverageCollectionSize = 4000;
-
-            // Set a constant for the path to the CSV File
-            const string pathToCSVFile = "../../../../datafiles/beverage_list.csv";
 
             // Create an instance of the UserInterface class
             UserInterface userInterface = new UserInterface();
 
             // Create an instance of the BeverageCollection class
-            BeverageCollection beverageCollection = new BeverageCollection(beverageCollectionSize);
-
-            // Create an instance of the CSVProcessor class
-            CSVProcessor csvProcessor = new CSVProcessor();
+            IBeverageRepository beverageRepository = new BeverageRepository();
 
             // Display the Welcome Message to the user
             userInterface.DisplayWelcomeGreeting();
@@ -34,28 +28,13 @@ namespace cis237_assignment_5
             int choice = userInterface.DisplayMenuAndGetResponse();
 
             // While the choice is not exit program
-            while (choice != 5)
+            while (choice != 6)
             {
                 switch (choice)
                 {
                     case 1:
-                        // Load the CSV File
-                        bool success = csvProcessor.ImportCSV(beverageCollection, pathToCSVFile);
-                        if (success)
-                        {
-                            // Display Success Message
-                            userInterface.DisplayImportSuccess();
-                        }
-                        else
-                        {
-                            // Display Fail Message
-                            userInterface.DisplayImportError();
-                        }
-                        break;
-
-                    case 2:
                         // Print Entire List Of Items
-                        string allItemsString = beverageCollection.ToString();
+                        string allItemsString = beverageRepository.ToString();
                         if (!String.IsNullOrWhiteSpace(allItemsString))
                         {
                             // Display all of the items
@@ -68,10 +47,10 @@ namespace cis237_assignment_5
                         }
                         break;
 
-                    case 3:
+                    case 2:
                         // Search For An Item
                         string searchQuery = userInterface.GetSearchQuery();
-                        string itemInformation = beverageCollection.FindById(searchQuery);
+                        string itemInformation = beverageRepository.FindById(searchQuery);
                         if (itemInformation != null)
                         {
                             userInterface.DisplayItemFound(itemInformation);
@@ -82,23 +61,84 @@ namespace cis237_assignment_5
                         }
                         break;
 
-                    case 4:
+                    case 3:
                         // Add A New Item To The List
                         string[] newItemInformation = userInterface.GetNewItemInformation();
-                        if (beverageCollection.FindById(newItemInformation[0]) == null)
+                        if (beverageRepository.FindById(newItemInformation[0]) == null)
                         {
-                            beverageCollection.AddNewItem(
+                            beverageRepository.AddNewItem(
                                 newItemInformation[0],
                                 newItemInformation[1],
                                 newItemInformation[2],
-                                decimal.Parse(newItemInformation[3]),
-                                (newItemInformation[4] == "True")
+                                newItemInformation[3],
+                                newItemInformation[4]
                             );
                             userInterface.DisplayAddWineItemSuccess();
                         }
                         else
                         {
                             userInterface.DisplayItemAlreadyExistsError();
+                        }
+                        break;
+
+                    case 4:
+                        //Search For An Item to update
+                        string updateSearchQuery = userInterface.GetUpdateSearchQuery();
+                        //Check to see if the item we want to update exists in the system
+                        bool success = beverageRepository.ItemExists(updateSearchQuery);
+
+                        //If it does exist
+                        if (success)
+                        {
+                            //Get the properties to update
+                            string[] updatedProperties = userInterface.GetUpdatedItemInformation();
+
+                            //Update the item and get back a bool as the result
+                            bool updateSuccess = beverageRepository.UpdateById(
+                                updateSearchQuery,
+                                updatedProperties[0],
+                                updatedProperties[1],
+                                updatedProperties[2],
+                                updatedProperties[3]
+                            );
+
+                            //If successfull display success, else error
+                            if (updateSuccess)
+                            {
+                                //Display the success message
+                                userInterface.DisplayItemUpdateSuccess();
+                            }
+                            else
+                            {
+                                //Display the error message
+                                userInterface.DisplayItemUpdateError();
+                            }
+                        }
+                        //Item does not exist, obviously can't update
+                        else
+                        {
+                            //Display item not found error message
+                            userInterface.DisplayItemFoundError();
+                        }
+                        break;
+
+
+                    case 5:
+
+                        //Search For An Item
+                        string deleteSearchQuery = userInterface.GetDeleteSearchQuery();
+                        //Attempt to delete the item
+                        success = beverageRepository.DeleteById(deleteSearchQuery);
+                        //If delete succeeded, show success message, else error
+                        if (success)
+                        {
+                            //Display delete success message
+                            userInterface.DisplayItemDeleted();
+                        }
+                        else
+                        {
+                            //Display delete error message
+                            userInterface.DisplayItemDeleteError();
                         }
                         break;
                 }

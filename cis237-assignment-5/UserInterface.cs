@@ -1,10 +1,13 @@
-﻿using System;
+﻿// Author: David Barnes
+// Class: CIS 237
+// Assignment: 5
+using System;
 
 namespace cis237_assignment_5
 {
     class UserInterface
     {
-        const int MAX_MENU_CHOICES = 5;
+        const int MAX_MENU_CHOICES = 6;
 
         /*
         |----------------------------------------------------------------------
@@ -58,6 +61,15 @@ namespace cis237_assignment_5
             return Console.ReadLine();
         }
 
+        // Get the search query from the user
+        public string GetUpdateSearchQuery()
+        {
+            Console.WriteLine();
+            Console.WriteLine("What beverage would you like to update (beverage id)?");
+            Console.Write("> ");
+            return Console.ReadLine();
+        }
+
         // Get New Item Information From The User.
         public string[] GetNewItemInformation()
         {
@@ -70,22 +82,58 @@ namespace cis237_assignment_5
             return new string[] { id, name, pack, price, active };
         }
 
-        // Display Import Success
-        public void DisplayImportSuccess()
+        // Get New Item Information From The User.
+        public string[] GetUpdatedItemInformation()
         {
-            Console.WriteLine();
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Wine List Has Been Imported Successfully");
-            Console.ForegroundColor = ConsoleColor.Gray;
+            //Answer string to get input from the user
+            string answer;
+
+            //String for each field that might get updated
+            string name = "";
+            string pack = "";
+            string price = "";
+            string active = "";
+
+            //*************************Update Item Description***************************
+            //See about updating the item's description
+            answer = this.GetBoolField("Name", "Do you want to update the item's {0}? (y/n)");
+            if (answer == "True")
+            {
+                name = this.GetStringField("Name", "What is the Item's new {0}?");
+            }
+
+            //***********************Update Item Pack****************************
+            //See about updating the item's pack
+            answer = this.GetBoolField("Pack", "Do you want to update the Item's {0}? (y/n)");
+            if (answer == "True")
+            {
+                pack = this.GetStringField("Pack", "What is the Item's new {0}?");
+            }
+
+            //*************************Update the Price****************************
+            //See about updating the item's price
+            answer = this.GetBoolField("Price", "Do you want to update the Item's {0}? (y/n)");
+            if (answer == "True")
+            {
+                price = this.GetDecimalField("Price", "What is the Item's new {0}?");
+            }
+
+            //**********************Update Active Status*****************************
+            //See about updating whether the item is active or not
+            answer = this.GetBoolField("Active", "Do you want to update the Item's {0} status? (y/n)");
+            if (answer == "True")
+            {
+                active = this.GetBoolField("Active", "Is the Item now {0}? (y/n)");
+            }
+
+            //Return a string array containing all of the parts entered from the user
+            return new string[] { name, pack, price, active };
         }
 
-        // Display Import Error
-        public void DisplayImportError()
+        //Get the search query from the user
+        public string GetDeleteSearchQuery()
         {
-            Console.WriteLine();
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("There was an error importing the CSV");
-            Console.ForegroundColor = ConsoleColor.Gray;
+            return this.GetStringField("Id", "What is the {0} of the item you would like to Delete?");
         }
 
         // Display All Items
@@ -150,6 +198,42 @@ namespace cis237_assignment_5
             Console.ForegroundColor = ConsoleColor.Gray;
         }
 
+        // Display Item Update Success
+        public void DisplayItemUpdateSuccess()
+        {
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("The Item was successfully updated");
+            Console.ForegroundColor = ConsoleColor.Gray;
+        }
+
+        // Display Item Update Error
+        public void DisplayItemUpdateError()
+        {
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("The Item could not be updated");
+            Console.ForegroundColor = ConsoleColor.Gray;
+        }
+
+        //Display Item Delete Success
+        public void DisplayItemDeleted()
+        {
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Item Deleted Successfully!");
+            Console.ForegroundColor = ConsoleColor.Gray;
+        }
+
+        //Display Item Delete Error
+        public void DisplayItemDeleteError()
+        {
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Item could not be deleted");
+            Console.ForegroundColor = ConsoleColor.Gray;
+        }
+
         /*
         |----------------------------------------------------------------------
         | Private Methods
@@ -162,11 +246,12 @@ namespace cis237_assignment_5
             Console.WriteLine();
             Console.WriteLine("What would you like to do?");
             Console.WriteLine();
-            Console.WriteLine("1. Load Wine List From CSV");
-            Console.WriteLine("2. Print The Entire List Of Items");
-            Console.WriteLine("3. Search For An Item");
-            Console.WriteLine("4. Add New Item To The List");
-            Console.WriteLine("5. Exit Program");
+            Console.WriteLine("1. Print The Entire List Of Items");
+            Console.WriteLine("2. Search For An Item");
+            Console.WriteLine("3. Add New Item To The List");
+            Console.WriteLine("4. Update Item In The List");
+            Console.WriteLine("5. Delete Item From The List");
+            Console.WriteLine("6. Exit Program");
         }
 
         // Display the Prompt
@@ -182,6 +267,7 @@ namespace cis237_assignment_5
             Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("That is not a valid option. Please make a valid choice");
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
         // Get the selection from the user
@@ -220,9 +306,9 @@ namespace cis237_assignment_5
         }
 
         // Get a valid string field from the console
-        private string GetStringField(string fieldName)
+        private string GetStringField(string fieldName, string message = "What is the new Item's {0}")
         {
-            Console.WriteLine("What is the new Item's {0}", fieldName);
+            Console.WriteLine(message, fieldName);
             string value = null;
             bool valid = false;
             while (!valid)
@@ -238,7 +324,7 @@ namespace cis237_assignment_5
                     Console.WriteLine("You must provide a value.");
                     Console.ForegroundColor = ConsoleColor.Gray;
                     Console.WriteLine();
-                    Console.WriteLine("What is the new Item's {0}", fieldName);
+                    Console.WriteLine(message, fieldName);
                     Console.Write("> ");
                 }
             }
@@ -246,9 +332,9 @@ namespace cis237_assignment_5
         }
 
         // Get a valid decimal field from the console
-        private string GetDecimalField(string fieldName)
+        private string GetDecimalField(string fieldName, string message = "What is the new Item's {0}")
         {
-            Console.WriteLine("What is the new Item's {0}", fieldName);
+            Console.WriteLine(message, fieldName);
             decimal value = 0;
             bool valid = false;
             while (!valid)
@@ -264,7 +350,7 @@ namespace cis237_assignment_5
                     Console.WriteLine("That is not a valid Decimal. Please enter a valid Decimal.");
                     Console.ForegroundColor = ConsoleColor.Gray;
                     Console.WriteLine();
-                    Console.WriteLine("What is the new Item's {0}", fieldName);
+                    Console.WriteLine(message, fieldName);
                     Console.Write("> ");
                 }
             }
@@ -273,9 +359,9 @@ namespace cis237_assignment_5
         }
 
         // Get a valid bool field from the console
-        private string GetBoolField(string fieldName)
+        private string GetBoolField(string fieldName, string message = "Should the Item be {0} (y/n)")
         {
-            Console.WriteLine("Should the Item be {0} (y/n)", fieldName);
+            Console.WriteLine(message, fieldName);
             string input = null;
             bool value = false;
             bool valid = false;
@@ -293,7 +379,7 @@ namespace cis237_assignment_5
                     Console.WriteLine("That is not a valid Entry.");
                     Console.ForegroundColor = ConsoleColor.Gray;
                     Console.WriteLine();
-                    Console.WriteLine("Should the Item be {0} (y/n)", fieldName);
+                    Console.WriteLine(message, fieldName);
                     Console.Write("> ");
                 }
             }
