@@ -6,7 +6,7 @@ David Barnes
 
 ## Description
 
-Either modify what I have in my Asignment1 key, which is included here, or bring in your files and use that to do the work. You may need to change the namespace in your files if you do not want to use my files.
+Either modify what I have in my Assignment 1 key, which is included here, or bring in your files and use that to do the work. You may need to change the namespace in your files if you do not want to use my files.
 
 You are going to take the Assignment 1 we did with the Beverage List .CSV and update it to work with a database in place of the CSV. In addition, the UI must be updated to accommodate some new features that were not in assignment 1.
 
@@ -14,9 +14,9 @@ The program should continually run until the user decides to exit (entering a ce
 
 The program should allow the following functionality:
 
-1. Loads the information about the Beverages from the database. This is achieved by making the connection to the database. You don't really have to 'code' anything, but you do need to setup the connection correctly.
+1. Loads the information about the Beverages from the database. This is achieved by making the connection to the database. You don't really have to 'code' anything, but you do need to setup the connection correctly. Additionally, you will no longer need menu option that was used to load the CSV.
 2. Allow the user to print the entire list of beverages.
-3. Allow the user to search for an beverage by the beverage id, and print out the beverage if found. Error message if not. This can be done with either Find, or Where.
+3. Allow the user to search for a beverage by the beverage id, and print out the beverage if found. Error message if not. This can be done with either Find, or Where.
 4. Allow the user to add a new beverage to the list. It should show a nice error message if the user tries to add a beverage with a primary id that is already in the DB.
 5. (NEW) Allow the user to update an existing beverage. (You should not allow the user to update the ID / ItemID since that is the Primary Key of the database record)
 6. (NEW) Allow the user to delete an existing beverage. It should show a nice error if the delete can not complete. (Deleting by ID is good enough. If you would like to offer other searches for deletion you can, but are not required to.)
@@ -34,16 +34,16 @@ The datafiles directory can be removed as well since it will not be used anymore
 
 To connect to the database you will use the following information.
 
-Sever address / name: barnesbrothers.ddns.net,443 //Remember that the comma denotes that the port number follows.
+Sever address / name: barnesbrothers.net
 
-Sql Server Authentication (Not Windows Auth):
+Sql Server Authentication (Not Windows Auth): This is the default when using the Scaffold command. Just listing for completeness.
 
-Username: FirstInial + LastName (All lowercase) (ie. John Smith would be jsmith)
+Username: FirstInitial + LastName (All lowercase) (ie. John Smith would be jsmith)
 It should be just like your valley username but without the ending numbers.
 
 Password: password (If you would like me to change your password to something else for you, I can)
 
-DatabaseName: Beverage + FirstInital + LastName
+DatabaseName: Beverage + FirstInitial + LastName
 
 ********************************************************************************************
 *NOTE: There is a database for each person. Use the one that is for you. Don't be a troll. If I hear about you trolling on someone else's database, you will get a zero for the assignment!
@@ -59,9 +59,6 @@ Solution Requirements:
 * Update functionality
 * Delete functionality
 * UI Class to handle I/O
-
-### Notes
-
 
 
 ## Grading
